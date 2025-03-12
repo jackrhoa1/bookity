@@ -12,13 +12,33 @@ body {
     color: white;
     font-size: 30px;
 }
-
+/* header buttons only */
 .btn.element {
 width: 160px;
 padding: 10px;
 border-radius: 10px;
 background-color: steelblue;
+color: black;
+
 }
+/* BEGIN Login/Register pages */
+.auth {
+    margin-left: 2rem;
+}
+.auth-form {
+    padding-left: 5px;
+    font-size: 20px;
+    color: black;
+    border-radius: 15px;
+}
+
+.change-auth-screen {
+    font-size: 15px;
+    color: blue;
+    margin-left: 2rem;
+}
+
+/* END login/register pages */
 
 h1 {
     text-align: center;
@@ -71,28 +91,34 @@ text-align: center;
 }
 
 table {
-    font-size: 20px;
-    margin-left: 10px;
+    font-size: 30px;
+    margin-left: 20px;
 }
 
-th, th{
-    padding-left: 80px;
-    padding-right: 80px;
-    padding-top: 5px;
-    padding-bottom: 5px;
+th {
+    padding: 10px;
 }
 
-table, td, th {
-    border: 1px solid black;
+td {
     border-collapse: collapse;
+    padding-left: 10px;
+    padding-right: 10px;
+    text-align: center;
 }
 
-.add-books {
-    width: 400px;
-}
+/* .add-books {
+    width: 200px;
+} */
+ 
 .username {
     width: 120px;
     background-color: skyblue;
     padding: 10px;
     border-radius: 10px;
+}
+
+.edit-icon-img {
+    width: 100px;
+    height: 100px;
+    content: cover;
 }

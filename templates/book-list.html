@@ -22,12 +22,20 @@
           ><button class="btn element add-books">All Books</button></a
         >
         <button class="btn element">Explore</button>
+        {% if not username %}
         <a href="{{ url_for('login')}}"
           ><button class="btn element add-books">Login</button></a
         >
         <a href="{{ url_for('register')}}"
           ><button class="btn element add-books">Register</button></a
         >
+        {% endif %} {% if username %}
+        <a href="{{ url_for('logout')}}"
+          ><button class="btn element add-books">Logout</button></a
+        >
+
+        <button class="username">{{username}}</button>
+        {% endif %}
       </div>
       <h1>Bookify</h1>
       <p>Discover, rate, and share books!</p>
@@ -41,10 +49,10 @@
         <th>Author</th>
         <th>Pages</th>
         <th>Year</th>
-        <th>ISBN</th>
         <th>Rating</th>
         <th>Tags</th>
         <th>Status</th>
+        <th>Edit</th>
       </tr>
       {% for row in books %}
       <tr>
@@ -52,10 +60,18 @@
         <td>{{row[1]}}</td>
         <td>{{row[2]}}</td>
         <td>{{row[3]}}</td>
-        <td>{{row[4]}}</td>
         <td>{{row[5]}}</td>
         <td>{{row[6]}}</td>
         <td>{{row[7]}}</td>
+        <td>
+          <a href="#thing"
+            ><img
+              class="edit-icon-img"
+              src="{{url_for('static', filename='images/edit_icon.png')}}"
+              alt="edit"
+            />
+          </a>
+        </td>
       </tr>
       {% endfor %}
     </table>

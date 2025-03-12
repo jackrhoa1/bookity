@@ -3,14 +3,22 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='styles/style.css')}}"
+    />
     <title>Login</title>
   </head>
   <body>
     <h1>Login Page</h1>
-    <a href="{{ url_for('register')}}">Don't have an account? Sign up</a>
-    <form method="POST">
-      {{ form.hidden_tag() }} {{ form.username }} {{ form.password }} {{
-      form.submit }}
-    </form>
+    <div class="auth">
+      <form method="POST">
+        {{ form.hidden_tag() }} {{ form.email(class="auth-form") }} {{
+        form.password(class="auth-form") }} {{ form.submit(class="auth-form") }}
+      </form>
+    </div>
+    <a href="{{ url_for('register')}}" class="change-auth-screen"
+      >Don't have an account? Sign up</a
+    >
   </body>
 </html>

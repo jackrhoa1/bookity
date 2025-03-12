@@ -22,12 +22,20 @@
           ><button class="btn element add-books">All Books</button></a
         >
         <button class="btn element">Explore</button>
+        {% if not username %}
         <a href="{{ url_for('login')}}"
           ><button class="btn element add-books">Login</button></a
         >
         <a href="{{ url_for('register')}}"
           ><button class="btn element add-books">Register</button></a
         >
+        {% endif %} {% if username %}
+        <a href="{{ url_for('logout')}}"
+          ><button class="btn element add-books">Logout</button></a
+        >
+
+        <button class="username">{{username}}</button>
+        {% endif %}
       </div>
       <h1>Bookify</h1>
       <p>Discover, rate, and share books!</p>

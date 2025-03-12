@@ -3,11 +3,9 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_login import UserMixin, LoginManager, login_required, login_user, logout_user, current_user
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, SubmitField
-from wtforms.validators import InputRequired, Length, ValidationError
-from book_database import get_books, add_book
+from wtforms.validators import InputRequired, Length, ValidationError, Email
 from flask_bcrypt import Bcrypt
-import helper_functions
-from load_books import add_new_books
+from utility import compare_authors
 
 # init
 app = Flask(__name__)
@@ -22,7 +20,7 @@ login_manager.login_view = 'login'
 # creates table to store login info
 class User(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(20), nullable=False, unique=True)
+    email = db.Column(db.String(20), nullable=False, unique=True)
     password = db.Column(db.String(80), nullable=False)
 
 # creates table for saved books by user table
@@ -44,35 +42,27 @@ class all_books(db.Model):
     year = db.Column(db.Integer)
     author = db.Column(db.String(30))
     isbn = db.Column(db.String(15))
-
-with app.app_context():
-    ## statement to reset table values and columns
-    # saved_books.__table__.drop(db.engine)
     
-    db.create_all()
 
-    ## code to add new books from load_books.py file
-    # new_books = add_new_books()
-    # for book in new_books:
-    #     add_this = all_books(title=book[0], pages=book[1], year=book[2],author=book[3],isbn=book[4])
-    #     db.session.add(add_this)
-    # db.session.commit()
+# reset_table(all_books, db=db, app=app)
 
+# add_new_books(all_books, db=db, app=app)
 
 class RegisterForm(FlaskForm):
-    username = StringField(validators=[InputRequired(), Length(min=4, max=20)], render_kw={"placeholder": "Username"})
+    email = StringField(validators=[InputRequired(), Length(min=4, max=20), Email()], render_kw={"placeholder": "Email", "type":"email"})
 
     password = PasswordField(validators=[InputRequired(), Length(min=4, max=20)], render_kw={"placeholder": "Password"})
 
     submit = SubmitField("Register")
 
-    def validate_username(self, username):
-        existing_user_username = User.query.filter_by(username=username.data).first()
-        if existing_user_username:
-            raise ValidationError("This username already exists")
+    def validate_email(self, email):
+        existing_user_email = User.query.filter_by(email=email.data).first()
+        if existing_user_email:
+
+            raise ValidationError("This email already exists")
 
 class LoginForm(FlaskForm):
-    username = StringField(validators=[InputRequired(), Length(min=4, max=20)], render_kw={"placeholder": "Username"})
+    email = StringField(validators=[InputRequired(), Length(min=4, max=20), Email()], render_kw={"placeholder": "Email", "type":"email"})
 
     password = PasswordField(validators=[InputRequired(), Length(min=4, max=20)], render_kw={"placeholder": "Password"})
 
@@ -88,7 +78,7 @@ def load_user(user_id):
 @app.route('/', methods=['GET', 'POST'])
 def index():
     if current_user.is_authenticated:
-        return render_template('index.html', username=current_user.username)
+        return render_template('index.html', email=current_user.email)
     return render_template('index.html')
 
 
@@ -103,31 +93,41 @@ def add_book():
         tags = request.form.get('tags')
         status = request.form.get('status')
         actual_book = db.session.query(all_books).filter(all_books.title.ilike(title)).first()
-        if actual_book and helper_functions.compare_authors(actual_book.author, author) >= 0.8:
+        if actual_book and compare_authors(actual_book.author, author) >= 0.8:
             isbn = actual_book.isbn
         else:
             isbn = None
-        new_saved_book = saved_books(user=current_user.username, isbn=isbn, title=title, rating=rating, tags=tags, status=status)
+        new_saved_book = saved_books(user=current_user.email, isbn=isbn, title=title, rating=rating, tags=tags, status=status)
         db.session.add(new_saved_book)
         db.session.commit()
         print("Added book")
-        return render_template('add-books.html', result="success")
-    return render_template('add-books.html')
+    
+        return render_template('add-books.html', result="success", email=current_user.email)
+    return render_template('add-books.html', email=current_user.email)
 
 
 # booklist page
 @app.route('/booklist')
 @login_required
 def book_list():
-    
-    books = db.session.query(saved_books).filter_by(user=current_user.username)
-    real_books = []
-    for book in books:
-        if book.isbn is not None:
-            book_data = db.session.query(all_books).filter_by(isbn=book.isbn).first()
-            real_books.append([book_data.title, book_data.author, book_data.pages, book_data.year, book_data.isbn, book.rating, book.tags, book.status])  
 
-    return render_template('book-list.html', books=real_books)
+    real_books = (
+        db.session.query(
+            all_books.title,
+            all_books.author,
+            all_books.pages,
+            all_books.year,
+            all_books.isbn,
+            saved_books.rating,
+            saved_books.tags,
+            saved_books.status
+        )
+        .join(saved_books, all_books.isbn == saved_books.isbn)
+        .filter(saved_books.user == current_user.email)
+        .all()
+    )
+
+    return render_template('book-list.html', books=real_books, email=current_user.email)
 
 
 
@@ -137,10 +137,9 @@ def book_list():
 def login():
     form = LoginForm()
     if form.validate_on_submit():
-        user = User.query.filter_by(username=form.username.data).first()
+        user = User.query.filter_by(email=form.email.data).first()
         if user:
             if bcrypt.check_password_hash(user.password, form.password.data):
-                # bcrypt.che
                 login_user(user)
                 return redirect(url_for('index'))
             else:
@@ -155,7 +154,7 @@ def register():
     form = RegisterForm()
     if form.validate_on_submit():
         hashed_password = bcrypt.generate_password_hash(form.password.data)
-        new_user = User(username=form.username.data, password=hashed_password)
+        new_user = User(email=form.email.data, password=hashed_password)
         db.session.add(new_user)
         db.session.commit()
         return redirect(url_for('login'))
