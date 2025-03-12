@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='styles/style.css')}}"
+    />
+    <title>Bookify</title>
+  </head>
+  <body>
+    <div class="header">
+      <div class="header-buttons">
+        <a href="{{ url_for('book_list')}}"
+          ><button class="btn element">My Books</button></a
+        >
+        <a href="{{ url_for('add_book')}}"
+          ><button class="btn element add-books">Add Books</button></a
+        >
+        <a href="{{ url_for('index')}}"
+          ><button class="btn element add-books">All Books</button></a
+        >
+        <button class="btn element">Explore</button>
+        {% if not username %}
+        <a href="{{ url_for('login')}}"
+          ><button class="btn element add-books">Login</button></a
+        >
+        <a href="{{ url_for('register')}}"
+          ><button class="btn element add-books">Register</button></a
+        >
+        {% endif %} {% if username %}
+        <a href="{{ url_for('logout')}}"
+          ><button class="btn element add-books">Logout</button></a
+        >
+
+        <button class="username">{{username}}</button>
+        {% endif %}
+      </div>
+      <h1>Bookify</h1>
+      <p>Discover, rate, and share books!</p>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,98 @@
+body {
+    background-color: whitesmoke;
+    margin: 0px;
+    padding: 0px;
+}
+
+.header {
+    margin-top: 0;
+    padding: 10px;
+    text-align: center;
+    background-color: teal;
+    color: white;
+    font-size: 30px;
+}
+
+.btn.element {
+width: 160px;
+padding: 10px;
+border-radius: 10px;
+background-color: steelblue;
+}
+
+h1 {
+    text-align: center;
+    font-size: 50px;
+
+}
+
+h2 {
+    text-align: center;
+    font-size: 30px;
+}
+
+.add-book {
+    background-color: steelblue;
+    border-radius: 10px;
+    color: black;
+}
+
+label, button {
+font-size: 25px;
+margin-left: 10px;
+width: 100px
+}
+.add-book input {
+    margin: 10px;
+    font-size: 25px;
+    border-radius: 8px;
+}
+select {
+    font-size: 25px;
+    border-radius: 10px;
+}
+.rating-box, .year-box {
+    width: 60px;
+}
+
+.tags-box {
+width: 100px;
+}
+
+.add-book h3 {
+    font-size: 40px;
+    margin-left: 10px;
+}
+
+/* book-list.html CSS below */
+
+.book-list {
+text-align: center;
+}
+
+table {
+    font-size: 20px;
+    margin-left: 10px;
+}
+
+th, th{
+    padding-left: 80px;
+    padding-right: 80px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+}
+
+table, td, th {
+    border: 1px solid black;
+    border-collapse: collapse;
+}
+
+.add-books {
+    width: 400px;
+}
+.username {
+    width: 120px;
+    background-color: skyblue;
+    padding: 10px;
+    border-radius: 10px;
+}

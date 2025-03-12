@@ -1,0 +1,11 @@
+.venv
+.pytest_cache
+__pycache__
+book_database.db
+book1-100k.csv
+server.py
+test_book-list.html
+test_index.html
+book_database.py
+instance
+load_books.py

@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='styles/style.css')}}"
+    />
+    <title>Add Books</title>
+  </head>
+  <body>
+    <div class="header">
+      <div class="header-buttons">
+        <a href="{{ url_for('book_list')}}"
+          ><button class="btn element">My Books</button></a
+        >
+        <a href="{{ url_for('add_book')}}"
+          ><button class="btn element add-books">Add Books</button></a
+        >
+        <a href="{{ url_for('index')}}"
+          ><button class="btn element add-books">All Books</button></a
+        >
+        <button class="btn element">Explore</button>
+        <a href="{{ url_for('login')}}"
+          ><button class="btn element add-books">Login</button></a
+        >
+        <a href="{{ url_for('register')}}"
+          ><button class="btn element add-books">Register</button></a
+        >
+      </div>
+      <h1>Bookify</h1>
+      <p>Discover, rate, and share books!</p>
+    </div>
+    <div class="add-book">
+      <h3>Add a book</h3>
+      <form method="post">
+        <label for="title">Title</label>
+        <input type="text" id="title" name="title" required />
+        <label for="author">Author</label>
+        <input type="text" id="author" name="author" required />
+        <label for="rating">Rating</label>
+        <input type="text" name="rating" id="rating" class="rating-box" />
+        <label for="tags">Tags</label>
+        <input type="text" name="tags" id="tags" class="tags-box" />
+        <label for="status">Status</label>
+        <select name="status">
+          <option selected="true" disabled="disabled">Select one</option>
+          <option value="To-Read">To-read</option>
+          <option value="Currently Reading">Currently Reading</option>
+          <option value="Read">Read</option>
+        </select>
+        <button type="submit">Add</button>
+      </form>
+    </div>
+    {% if result %}
+    <h2>{{result}}</h2>
+    {% endif %}
+  </body>
+</html>
