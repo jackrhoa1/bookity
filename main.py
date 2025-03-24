@@ -1,11 +1,17 @@
-from flask import Flask, render_template, redirect, url_for, request
+from flask import Flask, render_template, redirect, url_for, request, jsonify, make_response
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import UserMixin, LoginManager, login_required, login_user, logout_user, current_user
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, SubmitField
 from wtforms.validators import InputRequired, Length, ValidationError, Email
+from book_database import get_books, add_book
 from flask_bcrypt import Bcrypt
-from utility import compare_authors
+from utility import reset_table, compare_authors
+from load_books import add_new_books
+import datetime
+
+
+
 
 # init
 app = Flask(__name__)
@@ -44,7 +50,7 @@ class all_books(db.Model):
     isbn = db.Column(db.String(15))
     
 
-# reset_table(all_books, db=db, app=app)
+reset_table(saved_books, db=db, app=app)
 
 # add_new_books(all_books, db=db, app=app)
 
@@ -72,13 +78,34 @@ class LoginForm(FlaskForm):
 def load_user(user_id):
     return User.query.get(int(user_id))
 
+###########################
+# TO-DO:
+# use JS to edit/delete books from library (maybe move "add books" to top of library page)
+# ADD ABILITY TO LIST ALL BOOKS ON MAIN "ALL BOOKS" PAGE
+# IMPLEMENT ABILITY TO SEARCH BOOKS AND POPULATE USING JS TO SELECT
+# make text boxes wrap around
+# TO-FIX:
+#        
+#############################
+
+
 ##### Pages below
 
 # home page
 @app.route('/', methods=['GET', 'POST'])
 def index():
+
     if current_user.is_authenticated:
-        return render_template('index.html', email=current_user.email)
+        # column = request.args.get('email')
+        query = request.args.get('q')
+
+        if query:
+            results = User.query.filter(User.email.like(f"%{query}%")).all()
+        else:
+            results = ['results works', 'but your code doesn\'t!']
+
+
+        return render_template('index.html', email=current_user.email, results=results)
     return render_template('index.html')
 
 
@@ -106,10 +133,18 @@ def add_book():
     return render_template('add-books.html', email=current_user.email)
 
 
-# booklist page
-@app.route('/booklist')
+
+# my library page
+@app.route('/my-library')
 @login_required
 def book_list():
+
+    sort_by = ''
+
+    # how do I sort by a category selected by user without 
+    # 1. using f' string concat
+    # 2. using an if statement for EVERY cat.
+
 
     real_books = (
         db.session.query(
@@ -120,14 +155,35 @@ def book_list():
             all_books.isbn,
             saved_books.rating,
             saved_books.tags,
-            saved_books.status
+            saved_books.status,
+            saved_books.id
         )
         .join(saved_books, all_books.isbn == saved_books.isbn)
         .filter(saved_books.user == current_user.email)
+        .order_by(saved_books.id)
         .all()
     )
-
     return render_template('book-list.html', books=real_books, email=current_user.email)
+
+@app.route('/my-library/modify-tag', methods=['POST'])
+def modify_tag():
+    req = request.get_json()
+
+    print(req)
+
+    id = req.get('id')
+    new_tag = req.get('tag')
+    
+
+    book = db.session.execute(db.select(saved_books).filter_by(id=id)).scalar_one()
+    book.tags = new_tag
+    db.session.commit()
+    
+    res = make_response(jsonify(req), 200)
+
+    return res
+
+
 
 
 
@@ -168,7 +224,6 @@ def logout():
     return redirect(url_for('login'))
 
 ### End authentication pages
-
 
 if __name__ == "__main__":
     app.run(host='0.0.0.0', port=8000, debug=True)

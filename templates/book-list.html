@@ -7,13 +7,13 @@
       rel="stylesheet"
       href="{{ url_for('static', filename='styles/style.css')}}"
     />
-    <title>My Books</title>
+    <title>My Library</title>
   </head>
   <body>
     <div class="header">
       <div class="header-buttons">
         <a href="{{ url_for('book_list')}}"
-          ><button class="btn element">My Books</button></a
+          ><button class="btn element">My Library</button></a
         >
         <a href="{{ url_for('add_book')}}"
           ><button class="btn element add-books">Add Books</button></a
@@ -22,49 +22,78 @@
           ><button class="btn element add-books">All Books</button></a
         >
         <button class="btn element">Explore</button>
-        {% if not username %}
+        {% if not email %}
         <a href="{{ url_for('login')}}"
           ><button class="btn element add-books">Login</button></a
         >
         <a href="{{ url_for('register')}}"
           ><button class="btn element add-books">Register</button></a
         >
-        {% endif %} {% if username %}
+        {% endif %} {% if email %}
         <a href="{{ url_for('logout')}}"
           ><button class="btn element add-books">Logout</button></a
         >
 
-        <button class="username">{{username}}</button>
+        <button class="show-email">{{email}}</button>
         {% endif %}
       </div>
-      <h1>Bookify</h1>
-      <p>Discover, rate, and share books!</p>
+      <h1>Bookity</h1>
+      <p id="row5">Discover, rate, and share books!</p>
     </div>
+
     <h1>My Books</h1>
-    <table>
+
+    <table id="book-table">
       <tr>
         <!-- In here goes the headers -->
         <!-- <th>ID</th> -->
         <th>Title</th>
         <th>Author</th>
         <th>Pages</th>
-        <th>Year</th>
+
+        <th>ID</th>
+
         <th>Rating</th>
         <th>Tags</th>
         <th>Status</th>
         <th>Edit</th>
       </tr>
-      {% for row in books %}
+      {% for col in books %}
       <tr>
-        <td>{{row[0]}}</td>
-        <td>{{row[1]}}</td>
-        <td>{{row[2]}}</td>
-        <td>{{row[3]}}</td>
-        <td>{{row[5]}}</td>
-        <td>{{row[6]}}</td>
-        <td>{{row[7]}}</td>
         <td>
-          <a href="#thing"
+          <p>{{col[0]}}</p>
+        </td>
+        <td>{{col[1]}}</td>
+        <td>{{col[2]}}</td>
+
+        <td>{{col[8]}}</td>
+
+        <td>{{col[5]}}</td>
+        <td>
+          <div class="tag-edit">
+            <p id="actual-tag-{{loop.index0}}">{{col[6]}}</p>
+            <a onclick="openTagEditBox('{{ loop.index0 }}')">
+              <img
+                id="edit-tag-{{loop.index0}}"
+                class="edit-icon-img"
+                src="{{url_for('static', filename='images/edit_icon.png')}}"
+                alt="Edit Tag"
+              />
+            </a>
+            <input id="tag-input-{{loop.index0}}" value="{{col[6]}}" hidden />
+            <button
+              id="new-tag-submit-{{loop.index0}}"
+              onclick="submit('{{ loop.index0 }}')"
+              type="button"
+              hidden
+            >
+              Update
+            </button>
+          </div>
+        </td>
+        <td>{{col[7]}}</td>
+        <td>
+          <a onclick="openTagEditBox('{{ loop.index0 }}')"
             ><img
               class="edit-icon-img"
               src="{{url_for('static', filename='images/edit_icon.png')}}"
@@ -76,6 +105,9 @@
       {% endfor %}
     </table>
 
-    <div class="book-list"></div>
+    <script
+      src="{{ url_for('static', filename='js/scripts.js')}}"
+      defer
+    ></script>
   </body>
 </html>

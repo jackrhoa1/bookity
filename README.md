@@ -1,6 +1,6 @@
 # **Bookity**
 
-## This web application allows users to create accounts on Bookity and save books to their list.
+## This web application allows users to create accounts on Bookity and save books to their library.
 
 Users can rate these books and add custom tags, including support for emojis. Users can also mark the status of the book as to-read, currently reading, and read.
 
