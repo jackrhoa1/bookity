@@ -11,9 +11,10 @@ body {
     background-color: teal;
     color: white;
     font-size: 30px;
+    width: 100vw;
 }
 /* header buttons only */
-.btn.element {
+.header .btn.element {
 width: 160px;
 padding: 10px;
 border-radius: 10px;
@@ -21,6 +22,16 @@ background-color: steelblue;
 color: black;
 
 }
+.header .btn.element:hover {
+    cursor: pointer;
+}
+.header .btn.element:active {
+    background-color:hsl(207, 27%, 60%)
+}
+
+
+
+
 /* BEGIN Login/Register pages */
 .auth {
     margin-left: 2rem;
@@ -91,7 +102,7 @@ text-align: center;
 }
 
 table {
-    font-size: 30px;
+    font-size: 16px;
     margin-left: 20px;
 }
 
@@ -104,21 +115,39 @@ td {
     padding-left: 10px;
     padding-right: 10px;
     text-align: center;
+    white-space: normal;
+    flex-wrap: wrap;
+    word-wrap: normal;
 }
 
 /* .add-books {
     width: 200px;
 } */
  
-.username {
-    width: 120px;
+.show-email {
+    width: auto;
     background-color: skyblue;
     padding: 10px;
     border-radius: 10px;
 }
 
 .edit-icon-img {
-    width: 100px;
-    height: 100px;
+    width: 40px;
+    height: 40px;
     content: cover;
+}
+
+.edit-icon-img:hover {
+    cursor: pointer;
+}
+
+.tag-edit {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.book-search-results {
+    font-size: 30px;
+    margin-left: 20px;
+    /* padding: 1px; */
 }

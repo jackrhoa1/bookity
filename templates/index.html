@@ -19,9 +19,8 @@
           ><button class="btn element add-books">Add Books</button></a
         >
         <a href="{{ url_for('index')}}"
-          ><button class="btn element add-books">Search books</button></a
+          ><button class="btn element add-books">Search</button></a
         >
-        <button class="btn element">Explore</button>
         {% if not email %}
         <a href="{{ url_for('login')}}"
           ><button class="btn element add-books">Login</button></a
@@ -41,6 +40,20 @@
       <p>Discover, rate, and share books!</p>
     </div>
     <!-- end header -->
-    {{results}}
+    <form action="search">
+      <label for="search-bar">Book Title</label>
+      <input type="text" id="search-bar" name="q" />
+      <button type="submit">Search</button>
+    </form>
+    {% if titles %}
+    <h2>Results</h2>
+    {% for title in titles %}
+    <a href="add?title={{title}}&author={{authors[loop.index0]}}"
+      ><p class="book-search-results">
+        {{title}} by {{authors[loop.index0]}}
+      </p></a
+    >
+    <br />
+    {% endfor %} {% endif %}
   </body>
 </html>

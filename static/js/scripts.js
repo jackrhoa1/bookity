@@ -13,8 +13,8 @@ function openTagEditBox(rowNum) {
     const actualRowIndex = parseInt(rowNum) + 1;
     const edit_img = document.getElementById('edit-tag-' + rowNum)
     const tag_data = document.getElementById('actual-tag-' + rowNum)
-    // tag_data.hidden = true
-    // edit_img.hidden = true
+    tag_data.hidden = true
+    edit_img.hidden = true
     const inlineInputBox = document.getElementById('tag-input-' + rowNum);
     inlineInputBox.hidden = !(inlineInputBox.hidden);
     const inlineSubmitButton = document.getElementById('new-tag-submit-' + rowNum);
@@ -29,18 +29,21 @@ function openTagEditBox(rowNum) {
 }
 
 function submit(rowNum) {
-    console.log("SUBMIT RN: " + rowNum)
     const actualRowIndex = parseInt(rowNum) + 1;
     const inlineInputBox = document.getElementById('tag-input-' + rowNum);
+    const newTagItself = document.getElementById('actual-tag-'+rowNum);
+    newTagItself.textContent = inlineInputBox.value;
+    const id = bookTable.rows[actualRowIndex].cells[3].textContent
     
-    tag_data = bookTable.rows[actualRowIndex].cells[5]
-    console.log(tag_data)
-    tag_data = inlineInputBox.value;
-    const isbn = bookTable.rows[actualRowIndex].cells[3].textContent
     const edit_img = document.getElementById('edit-tag-' + rowNum)
-    edit_img.hidden = true
-    
-    change_data_table(inlineInputBox.value, isbn);
+    edit_img.hidden = false
+    const submit_button = document.getElementById('new-tag-submit-' + rowNum);
+    submit_button.hidden = true;
+    inlineInputBox.hidden = true;
+    newTagItself.hidden = false;
+
+    // tag_data.textContent = inlineInputBox.value;
+    change_data_table(inlineInputBox.value, id);
     // inlineInputBox.value is the text we want to send
 
 }

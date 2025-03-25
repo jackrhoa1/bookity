@@ -19,9 +19,8 @@
           ><button class="btn element add-books">Add Books</button></a
         >
         <a href="{{ url_for('index')}}"
-          ><button class="btn element add-books">All Books</button></a
+          ><button class="btn element add-books">Search</button></a
         >
-        <button class="btn element">Explore</button>
         {% if not email %}
         <a href="{{ url_for('login')}}"
           ><button class="btn element add-books">Login</button></a
@@ -51,12 +50,11 @@
         <th>Author</th>
         <th>Pages</th>
 
-        <th>ID</th>
+        <th hidden>ID</th>
 
         <th>Rating</th>
         <th>Tags</th>
         <th>Status</th>
-        <th>Edit</th>
       </tr>
       {% for col in books %}
       <tr>
@@ -66,7 +64,7 @@
         <td>{{col[1]}}</td>
         <td>{{col[2]}}</td>
 
-        <td>{{col[8]}}</td>
+        <td hidden>{{col[8]}}</td>
 
         <td>{{col[5]}}</td>
         <td>
@@ -92,15 +90,6 @@
           </div>
         </td>
         <td>{{col[7]}}</td>
-        <td>
-          <a onclick="openTagEditBox('{{ loop.index0 }}')"
-            ><img
-              class="edit-icon-img"
-              src="{{url_for('static', filename='images/edit_icon.png')}}"
-              alt="edit"
-            />
-          </a>
-        </td>
       </tr>
       {% endfor %}
     </table>

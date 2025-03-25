@@ -8,7 +8,7 @@ from book_database import get_books, add_book
 from flask_bcrypt import Bcrypt
 from utility import reset_table, compare_authors
 from load_books import add_new_books
-import datetime
+import difflib
 
 
 
@@ -95,19 +95,42 @@ def load_user(user_id):
 @app.route('/', methods=['GET', 'POST'])
 def index():
 
+    
+
+
+        # return render_template('index.html', email=current_user.email, results=results)
+    return render_template('index.html', email=current_user.email)
+
+@app.route('/search', methods=['GET'])
+def search():
     if current_user.is_authenticated:
         # column = request.args.get('email')
         query = request.args.get('q')
-
+        books = []
         if query:
-            results = User.query.filter(User.email.like(f"%{query}%")).all()
+            ###### Basic search system:
+            # results = all_books.query.filter(all_books.title.ilike(f'{query}')).all()
+            # for book in results:
+            #     books.append(book.title)
+            #     print(book.title)
+
+            ## fuzzy search:
+            results = all_books.query.all()
+            titles = [book.title for book in results]
+            authors = []
+            matches = difflib.get_close_matches(query, titles, n=5, cutoff=0.4)
+            for title in matches:
+                books_in_results: list = all_books.query.filter(all_books.title.ilike(f'{title}')).all()
+                for book in books_in_results:
+                    authors.append(book.author)
+                
+
+                
         else:
             results = ['results works', 'but your code doesn\'t!']
-
-
-        return render_template('index.html', email=current_user.email, results=results)
-    return render_template('index.html')
-
+    else:
+        results = ['wtf']
+    return render_template('index.html', titles=matches, authors=authors)
 
 # add books page
 @app.route('/add', methods=['GET', 'POST'])
