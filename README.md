@@ -1,11 +1,11 @@
 # **Bookity**
 
-## This web app allows users to create accounts on Bookity and search for books to save to their library.
+## This web app gives users a medium to save, rate, tag, and search for books across an expansive library.
 
-Users can search for books with keywords in their title and the results contain a hyperlink to add the book to their library.
+Users can search for books based keywords in titles and add the resulting books to their library.
 
-Users can rate these books and add custom tags, including emojis. Users can also mark the status of the book as to-read, currently reading, and read.
+Users can rate and add custom tags—including emojis–to these books. Users can also mark the status of the book as to-read, currently reading, and read.
 
-Other information, such as page count, is automatically populated into their library.
+Other information about the books, such as page count and year published, is visible from within the library.
 
-All users have their own login information used to access and append their personal library.
+All users have their own login information to access and append books to their personal library.
